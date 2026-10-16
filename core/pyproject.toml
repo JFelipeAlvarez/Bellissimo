@@ -7,6 +7,9 @@ requires-python = ">=3.12"
 dependencies = [
     "pydantic>=2.9,<3",
     "pyyaml>=6.0,<7",
+    # Base de datos de zonas horarias. Windows no la trae, y sin ella
+    # zoneinfo no puede saber qué hora es en America/Bogota.
+    "tzdata>=2024.1",
 ]
 
 [project.scripts]

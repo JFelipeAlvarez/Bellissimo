@@ -21,6 +21,7 @@ from collections.abc import Iterator
 from datetime import time
 from enum import StrEnum
 from typing import Annotated, Self
+from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 from pydantic import (
     AfterValidator,
@@ -74,6 +75,14 @@ error, solo se reporta ese error y no, además, que la lista quedó vacía.
 """
 
 
+def _zona_horaria_valida(nombre: str) -> str:
+    try:
+        ZoneInfo(nombre)
+    except (ZoneInfoNotFoundError, ValueError) as exc:
+        raise ValueError(f"'{nombre}' no es una zona horaria válida (ej. America/Bogota)") from exc
+    return nombre
+
+
 class Modelo(BaseModel):
     """Configuración común a todos los modelos de la carta."""
 
@@ -91,7 +100,8 @@ class Restaurante(Modelo):
     whatsapp: Annotated[str, StringConstraints(pattern=r"^57\d{10}$")]
     """Número con indicativo de Colombia y sin espacios: 57 + 10 dígitos."""
     instagram: Annotated[str, StringConstraints(pattern=r"^[a-z0-9._]+$")]
-    zona_horaria: Texto
+    zona_horaria: Annotated[str, AfterValidator(_zona_horaria_valida)]
+    """Zona horaria IANA, por ejemplo `America/Bogota`."""
     alergenos: Texto
 
 
