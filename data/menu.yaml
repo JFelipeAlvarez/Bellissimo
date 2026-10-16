@@ -1,0 +1,306 @@
+# ─────────────────────────────────────────────────────────────────────────────
+#  CARTA DE BELLISSIMO · Única fuente de verdad (ver docs/adr/0001)
+#
+#  Reglas para editar este archivo:
+#  - Los precios van en pesos colombianos, como número entero y sin puntos:
+#    13000, no 13.000 ni "13.000".
+#  - Cada plato tiene un `id` único, en minúsculas y con guiones, sin tildes:
+#    ravioli-carne. El id no se muestra al cliente; sirve para identificar el
+#    plato en el sistema, así que no lo cambies aunque cambies el nombre.
+#  - La indentación (los espacios a la izquierda) importa. Usa siempre 2 espacios.
+#  - Después de editar, valida con:  cd core && uv run bellissimo validar
+# ─────────────────────────────────────────────────────────────────────────────
+
+restaurante:
+  nombre: Bellissimo
+  lema: Pastas para sorprender
+  descripcion: Pasta fresca artesanal · Producción propia
+  direccion: "Calle 8 # 4-51"
+  whatsapp: "573150336914"        # con indicativo del país, solo números
+  instagram: bellissimo.pastas
+  zona_horaria: America/Bogota
+  alergenos: >-
+    Nuestros productos contienen o pueden contener gluten (trigo), huevo,
+    leche y derivados lácteos. Algunas preparaciones incluyen carne de res o
+    pollo. Si eres alérgico a algún alimento, infórmalo a nuestro personal
+    antes de ordenar.
+
+# Horario de atención. Un día sin horario (null) significa cerrado.
+horario:
+  lunes:     { abre: "12:30", cierra: "20:00" }
+  martes:    null
+  miercoles: { abre: "12:30", cierra: "20:00" }
+  jueves:    { abre: "12:30", cierra: "20:00" }
+  viernes:   { abre: "12:30", cierra: "20:00" }
+  sabado:    { abre: "12:30", cierra: "20:00" }
+  domingo:   { abre: "12:30", cierra: "19:00" }
+
+# ── Arma tu pasta ────────────────────────────────────────────────────────────
+# El cliente elige una pasta y, si quiere, una salsa y una proteína.
+# El precio del plato es la suma de lo que elige.
+arma_tu_pasta:
+  incluye: pan y queso parmesano
+
+  pastas:
+    - nombre: Ravioli
+      platos:
+        - id: ravioli-carne
+          nombre: Ravioli de carne
+          precio: 13000
+          descripcion: Carne de res seleccionada.
+        - id: ravioli-4-quesos
+          nombre: Ravioli de 4 quesos
+          precio: 13000
+          descripcion: Ricota, campesino, azul y parmesano.
+        - id: ravioli-pollo
+          nombre: Ravioli de pollo
+          precio: 13000
+          descripcion: Mezcla de pechuga de pollo.
+        - id: ravioli-queso-espinaca
+          nombre: Ravioli de queso y espinaca
+          precio: 13000
+          descripcion: Queso fresco y espinaca.
+        - id: ravioli-ricota-nuez
+          nombre: Ravioli de ricota y nuez
+          precio: 13000
+          descripcion: Ricota y trozos de nuez.
+        - id: ravioli-salmon
+          nombre: Ravioli de salmón
+          precio: 18000
+
+    - nombre: Pastas largas
+      platos:
+        - id: fettuccine-huevo
+          nombre: Fettuccine al huevo
+          precio: 7000
+        - id: fettuccine-cafe
+          nombre: Fettuccine de café
+          precio: 7000
+        - id: fettuccine-tinta-calamar
+          nombre: Fettuccine tinta de calamar
+          precio: 7500
+        - id: linguine-huevo
+          nombre: Linguine al huevo
+          precio: 7000
+        - id: linguine-mixto
+          nombre: Linguine mixto
+          precio: 7000
+          descripcion: Zanahoria, espinaca y remolacha.
+        - id: spaguetti
+          nombre: Spaguetti
+          precio: 7000
+
+  salsas:
+    - nombre: Rojas
+      color: roja
+      platos:
+        - id: salsa-napolitana
+          nombre: Napolitana
+          precio: 10000
+          descripcion: Tomate, zanahoria, cebolla, apio y hierbas.
+        - id: salsa-bolonesa
+          nombre: Boloñesa
+          precio: 10000
+          descripcion: Carne de res, tomate y vegetales a fuego lento.
+        - id: salsa-amatriciana
+          nombre: Amatriciana
+          precio: 10000
+          descripcion: Trozos de tomate maduro y albahaca.
+
+    - nombre: Blancas
+      color: blanca
+      platos:
+        - id: salsa-bellissimo
+          nombre: Bellissimo
+          precio: 10000
+          descripcion: Crema de leche, napolitana, tocineta y pollo.
+          de_la_casa: true
+        - id: salsa-alfredo
+          nombre: Alfredo
+          precio: 10000
+          descripcion: Crema, mantequilla, queso, tocineta y nueces.
+        - id: salsa-carbonara
+          nombre: Carbonara
+          precio: 10000
+          descripcion: Crema, mantequilla, tocineta y yemas de huevo.
+        - id: salsa-4-quesos
+          nombre: 4 quesos
+          precio: 10000
+          descripcion: Mezcla cremosa de quesos seleccionados.
+        - id: salsa-champinon
+          nombre: Champiñón
+          precio: 10000
+        - id: salsa-camaron
+          nombre: Camarón
+          precio: 15000
+
+    - nombre: Verde
+      color: verde
+      platos:
+        - id: salsa-pesto
+          nombre: Pesto
+          precio: 10000
+
+  proteinas:
+    - id: albondigas-carne
+      nombre: Albóndigas de carne
+      precio: 15000
+    - id: albondigas-queso-espinaca
+      nombre: Albóndigas de queso y espinaca
+      precio: 15000
+    - id: milanesa-pollo
+      nombre: Milanesa de pollo
+      precio: 16000
+    - id: ossobuco
+      nombre: Ossobuco
+      precio: 16000
+    - id: callos-antonieta
+      nombre: Callos Antonieta
+      precio: 16000
+    - id: salmon
+      nombre: Salmón
+      precio: 19000
+    - id: salchichas-italianas
+      nombre: 2 salchichas italianas
+      precio: 19000
+
+# ── Secciones de la carta ────────────────────────────────────────────────────
+# Cada sección tiene `platos` directamente, o `grupos` con sus propios platos
+# (como Bebidas). Nunca las dos cosas a la vez.
+secciones:
+  - id: horno
+    titulo: Lasañas y canelones
+    nota: Pasta fresca en capas, gratinada con queso.
+    incluye: pan
+    platos:
+      - id: lasana-ferrara
+        nombre: Lasaña Ferrara
+        precio: 20000
+        descripcion: Carne de res, cerdo y chorizo, salsa napolitana, bechamel y queso gratinado.
+      - id: lasana-piamonte
+        nombre: Lasaña Piamonte
+        precio: 20000
+        descripcion: Pollo desmechado, tocineta, jamón, champiñón, bechamel, salsa napolitana y queso gratinado.
+      - id: lasana-vegetariana
+        nombre: Lasaña vegetariana
+        precio: 20000
+        descripcion: Zanahoria, espinaca, champiñón, zucchini, ricota, bechamel, salsa napolitana y queso gratinado.
+      - id: lasana-capri
+        nombre: Lasaña Capri
+        precio: 25000
+        descripcion: Salmón, espinaca, bechamel, salsa napolitana y queso gratinado.
+      - id: canelon-mixto
+        nombre: Canelón mixto
+        precio: 20000
+        descripcion: Dos rollos de pasta, uno relleno de carne y otro de pollo con jamón, con salsa napolitana, bechamel y queso gratinado.
+
+  - id: entradas
+    titulo: Entradas
+    nota: Paninos en pan de masa madre, cubiertos con queso mozzarella.
+    platos:
+      - id: panino-cuori-di-ragu
+        nombre: Panino cuori di ragù
+        precio: 12000
+        descripcion: Relleno de salsa boloñesa con champiñón.
+      - id: panino-del-nonno
+        nombre: Panino del nonno
+        precio: 12000
+        descripcion: Trozos de pollo bañados en salsa Bellissimo.
+      - id: panino-panceta
+        nombre: Panino de panceta
+        precio: 12000
+        descripcion: Jugosa panceta bañada en salsa napolitana.
+      - id: panino-vegetariano
+        nombre: Panino vegetariano
+        precio: 12000
+        descripcion: Ricota y espinaca bañadas en salsa napolitana.
+
+  - id: cremas
+    titulo: Cremas
+    nota: Acompañadas de croutones de queso parmesano.
+    platos:
+      - id: crema-tomate
+        nombre: Crema de tomate natural
+        precio: 8000
+      - id: crema-pimentones
+        nombre: Crema de pimentones asados
+        precio: 8000
+
+  - id: ninos
+    titulo: Menú para niños
+    platos:
+      - id: lonchera-bambino
+        nombre: Lonchera Bambino
+        precio: 30000
+        descripcion: Raviolitos de colores con 3 albóndigas de carne o nuggets de pollo, bebida y sorpresa.
+        opciones: [Con albóndigas, Con nuggets]
+
+  - id: postres
+    titulo: Postres
+    platos:
+      - id: panna-cotta
+        nombre: Panna cotta
+        precio: 12000
+        descripcion: Con salsa de caramelo.
+      - id: tiramisu
+        nombre: Tiramisú
+        precio: 12000
+
+  - id: bebidas
+    titulo: Bebidas
+    grupos:
+      - nombre: Artesanal
+        platos:
+          - id: kombucha
+            nombre: Kombucha Los Cuervos
+            precio: 6000
+            descripcion: Bebida probiótica de la casa.
+            opciones: [Remolacha, Zanahoria, Ruibarbo, Flor de Jamaica, Menta, Hierbabuena, Jengibre]
+      - nombre: Gaseosas, té y agua
+        platos:
+          - id: coca-cola
+            nombre: Coca-Cola
+            precio: 4500
+            opciones: [Original, Zero]
+          - id: te-limon
+            nombre: Té de limón en botella
+            precio: 4500
+          - id: ginger
+            nombre: Ginger
+            precio: 4500
+          - id: bretana
+            nombre: Bretaña
+            precio: 4500
+          - id: agua
+            nombre: Agua
+            precio: 3500
+            opciones: [Sin gas, Con gas]
+      - nombre: Limonadas
+        platos:
+          - id: limonada-natural
+            nombre: Limonada natural
+            precio: 3000
+          - id: limonada-cerezada
+            nombre: Limonada cerezada
+            precio: 3000
+      - nombre: Cerveza y vino
+        platos:
+          - id: club-colombia
+            nombre: Cerveza Club Colombia
+            precio: 6000
+            descripcion: En lata.
+            opciones: [Dorada, Roja]
+          - id: lambrusco
+            nombre: Vino Lambrusco, botella
+            precio: 50000
+
+  - id: adicionales
+    titulo: Adicionales
+    nota: ¿Quieres más? Pide una porción extra.
+    platos:
+      - id: porcion-parmesano
+        nombre: Porción de queso parmesano
+        precio: 5000
+      - id: porcion-pan
+        nombre: Porción de pan
+        precio: 1000
