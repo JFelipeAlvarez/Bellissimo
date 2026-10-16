@@ -1,0 +1,124 @@
+{
+  "_descripcion": "Casos de precio sobre shared/fixtures/carta.json. Los cumplen Python (pytest) y TypeScript (Vitest).",
+  "formato_pesos": [
+    [500, "$500"],
+    [7000, "$7.000"],
+    [32500, "$32.500"],
+    [1000000, "$1.000.000"]
+  ],
+  "casos": [
+    {
+      "descripcion": "Plato armado completo: pasta + salsa + proteína",
+      "lineas": [
+        { "tipo": "armado", "pasta": "fettuccine-tinta-calamar", "salsa": "salsa-bolonesa", "proteina": "albondigas-carne" }
+      ],
+      "precios_unitarios": [32500],
+      "subtotal": 32500
+    },
+    {
+      "descripcion": "Solo la pasta: la salsa y la proteína son opcionales",
+      "lineas": [{ "tipo": "armado", "pasta": "fettuccine-huevo" }],
+      "precios_unitarios": [7000],
+      "subtotal": 7000
+    },
+    {
+      "descripcion": "Pasta y proteína, sin salsa",
+      "lineas": [{ "tipo": "armado", "pasta": "ravioli-carne", "proteina": "salmon" }],
+      "precios_unitarios": [32000],
+      "subtotal": 32000
+    },
+    {
+      "descripcion": "La combinación más cara: ravioli de salmón, salsa de camarón y salmón",
+      "lineas": [{ "tipo": "armado", "pasta": "ravioli-salmon", "salsa": "salsa-camaron", "proteina": "salmon" }],
+      "precios_unitarios": [52000],
+      "subtotal": 52000
+    },
+    {
+      "descripcion": "Producto con opción: la opción no cambia el precio",
+      "lineas": [{ "tipo": "plato", "id": "coca-cola", "opcion": "Zero" }],
+      "precios_unitarios": [4500],
+      "subtotal": 4500
+    },
+    {
+      "descripcion": "Cantidades: el subtotal multiplica cada línea por su cantidad",
+      "lineas": [
+        { "tipo": "plato", "id": "lasana-capri", "cantidad": 2 },
+        { "tipo": "plato", "id": "limonada-natural", "cantidad": 3 }
+      ],
+      "precios_unitarios": [25000, 3000],
+      "subtotal": 59000
+    },
+    {
+      "descripcion": "Pedido completo con platos armados y productos",
+      "lineas": [
+        { "tipo": "armado", "pasta": "fettuccine-tinta-calamar", "salsa": "salsa-bolonesa", "proteina": "albondigas-carne" },
+        { "tipo": "plato", "id": "coca-cola", "opcion": "Zero", "cantidad": 2 },
+        { "tipo": "plato", "id": "porcion-pan" }
+      ],
+      "precios_unitarios": [32500, 4500, 1000],
+      "subtotal": 42500
+    }
+  ],
+  "invalidos": [
+    {
+      "descripcion": "Pedido sin productos",
+      "lineas": [],
+      "codigo": "pedido_vacio"
+    },
+    {
+      "descripcion": "Un producto que no existe en la carta",
+      "lineas": [{ "tipo": "plato", "id": "pizza-hawaiana" }],
+      "codigo": "plato_inexistente"
+    },
+    {
+      "descripcion": "La pasta de un plato armado debe ser una pasta",
+      "lineas": [{ "tipo": "armado", "pasta": "salsa-bolonesa" }],
+      "codigo": "no_es_pasta"
+    },
+    {
+      "descripcion": "La salsa de un plato armado debe ser una salsa",
+      "lineas": [{ "tipo": "armado", "pasta": "fettuccine-huevo", "salsa": "salmon" }],
+      "codigo": "no_es_salsa"
+    },
+    {
+      "descripcion": "La proteína de un plato armado debe ser una proteína",
+      "lineas": [{ "tipo": "armado", "pasta": "fettuccine-huevo", "proteina": "lasana-capri" }],
+      "codigo": "no_es_proteina"
+    },
+    {
+      "descripcion": "Las proteínas no se piden sueltas, solo dentro de un plato armado",
+      "lineas": [{ "tipo": "plato", "id": "salmon" }],
+      "codigo": "solo_en_arma_tu_pasta"
+    },
+    {
+      "descripcion": "Las salsas no se piden sueltas",
+      "lineas": [{ "tipo": "plato", "id": "salsa-camaron" }],
+      "codigo": "solo_en_arma_tu_pasta"
+    },
+    {
+      "descripcion": "Un producto con opciones exige elegir una",
+      "lineas": [{ "tipo": "plato", "id": "coca-cola" }],
+      "codigo": "falta_opcion"
+    },
+    {
+      "descripcion": "La opción elegida debe existir",
+      "lineas": [{ "tipo": "plato", "id": "coca-cola", "opcion": "Light" }],
+      "codigo": "opcion_invalida"
+    },
+    {
+      "descripcion": "Un producto sin opciones no acepta una",
+      "lineas": [{ "tipo": "plato", "id": "limonada-natural", "opcion": "Grande" }],
+      "codigo": "sin_opciones"
+    },
+    {
+      "descripcion": "La cantidad mínima es 1",
+      "lineas": [{ "tipo": "plato", "id": "porcion-pan", "cantidad": 0 }],
+      "codigo": "cantidad_invalida"
+    },
+    {
+      "descripcion": "La cantidad máxima por línea es 50",
+      "lineas": [{ "tipo": "plato", "id": "porcion-pan", "cantidad": 51 }],
+      "codigo": "cantidad_invalida"
+    }
+  ]
+}

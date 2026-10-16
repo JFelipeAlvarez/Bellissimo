@@ -1,0 +1,77 @@
+{
+  "_descripcion": "Estado de atención según el horario de shared/fixtures/carta.json (zona America/Bogota). Lun 2026-10-19 … Dom 2026-10-25. `proxima_apertura` va en hora de Bogotá.",
+  "casos": [
+    {
+      "descripcion": "Lunes a mediodía: abierto",
+      "ahora": "2026-10-19T13:00:00-05:00",
+      "abierto": true,
+      "cierra": "20:00",
+      "proxima_apertura": null,
+      "texto": "Abierto · cierra a las 8:00 p. m."
+    },
+    {
+      "descripcion": "Justo a la hora de apertura ya está abierto",
+      "ahora": "2026-10-19T12:30:00-05:00",
+      "abierto": true,
+      "cierra": "20:00",
+      "proxima_apertura": null,
+      "texto": "Abierto · cierra a las 8:00 p. m."
+    },
+    {
+      "descripcion": "Justo a la hora de cierre ya está cerrado; el martes no abre",
+      "ahora": "2026-10-19T20:00:00-05:00",
+      "abierto": false,
+      "cierra": null,
+      "proxima_apertura": "2026-10-21T12:30:00-05:00",
+      "texto": "Cerrado · abrimos el miércoles a las 12:30 p. m."
+    },
+    {
+      "descripcion": "Antes de abrir: abre hoy",
+      "ahora": "2026-10-19T09:00:00-05:00",
+      "abierto": false,
+      "cierra": null,
+      "proxima_apertura": "2026-10-19T12:30:00-05:00",
+      "texto": "Cerrado · abrimos hoy a las 12:30 p. m."
+    },
+    {
+      "descripcion": "Martes: cerrado todo el día, abre mañana",
+      "ahora": "2026-10-20T15:00:00-05:00",
+      "abierto": false,
+      "cierra": null,
+      "proxima_apertura": "2026-10-21T12:30:00-05:00",
+      "texto": "Cerrado · abrimos mañana a las 12:30 p. m."
+    },
+    {
+      "descripcion": "Domingo cierra más temprano",
+      "ahora": "2026-10-25T18:00:00-05:00",
+      "abierto": true,
+      "cierra": "19:00",
+      "proxima_apertura": null,
+      "texto": "Abierto · cierra a las 7:00 p. m."
+    },
+    {
+      "descripcion": "Domingo después de las 7:00 p. m.: abre mañana lunes",
+      "ahora": "2026-10-25T19:30:00-05:00",
+      "abierto": false,
+      "cierra": null,
+      "proxima_apertura": "2026-10-26T12:30:00-05:00",
+      "texto": "Cerrado · abrimos mañana a las 12:30 p. m."
+    },
+    {
+      "descripcion": "Hora dada en UTC: 18:00 UTC son las 13:00 en Bogotá",
+      "ahora": "2026-10-19T18:00:00Z",
+      "abierto": true,
+      "cierra": "20:00",
+      "proxima_apertura": null,
+      "texto": "Abierto · cierra a las 8:00 p. m."
+    },
+    {
+      "descripcion": "En UTC ya es martes, pero en Bogotá sigue siendo lunes 8:30 p. m.",
+      "ahora": "2026-10-20T01:30:00Z",
+      "abierto": false,
+      "cierra": null,
+      "proxima_apertura": "2026-10-21T12:30:00-05:00",
+      "texto": "Cerrado · abrimos el miércoles a las 12:30 p. m."
+    }
+  ]
+}
