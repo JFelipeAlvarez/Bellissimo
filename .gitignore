@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+
+# Node / Astro
+node_modules/
+dist/
+.astro/
+
+# Archivos generados por core/ (se crean en cada build)
+web/src/data/generated/
+
+# Salidas
+out/
+*.log
+
+# Editores y sistema operativo
+.DS_Store
+Thumbs.db
+.idea/
