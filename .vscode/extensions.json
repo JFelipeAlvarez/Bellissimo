@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "ms-python.python",
+    "charliermarsh.ruff",
+    "astro-build.astro-vscode",
+    "editorconfig.editorconfig",
+    "redhat.vscode-yaml"
+  ]
+}

@@ -1,0 +1,58 @@
+# Integración continua: corre en cada pull request y en cada push a main.
+# Si algún paso falla, el PR queda marcado en rojo y no se debe fusionar.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# Si llega un push nuevo al mismo PR, cancela la ejecución anterior.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  core:
+    name: Núcleo (Python)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: core
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - name: Instalar dependencias
+        run: uv sync --locked
+      - name: Linter (ruff)
+        run: uv run ruff check .
+      - name: Formato (ruff)
+        run: uv run ruff format --check .
+      - name: Tipos (mypy)
+        run: uv run mypy src
+      - name: Pruebas (pytest)
+        run: uv run pytest
+
+  web:
+    name: Web (TypeScript)
+    runs-on: ubuntu-latest
+    needs: core
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - name: Instalar dependencias
+        run: npm ci
+      - name: Tipos y build (astro)
+        run: npm run build
