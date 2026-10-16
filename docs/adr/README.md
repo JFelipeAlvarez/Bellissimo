@@ -12,6 +12,7 @@ Reglas:
 | [0001](0001-fuente-unica-de-verdad.md) | La carta tiene una única fuente de verdad | Aceptada |
 | [0002](0002-python-nucleo-typescript-web.md) | Python para el núcleo, TypeScript para la web | Aceptada |
 | [0003](0003-sitio-estatico-sin-backend.md) | Sitio estático sin backend en la fase 1 | Aceptada |
+| [0004](0004-precios-enteros-y-validacion-estricta.md) | Precios como enteros y validación estricta de la carta | Aceptada |
 
 ## Plantilla
 
