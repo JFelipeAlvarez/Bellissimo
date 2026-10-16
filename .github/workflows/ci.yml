@@ -37,6 +37,8 @@ jobs:
         run: uv run mypy src
       - name: Pruebas (pytest)
         run: uv run pytest
+      - name: Carta (data/menu.yaml)
+        run: uv run bellissimo validar
 
   web:
     name: Web (TypeScript)
