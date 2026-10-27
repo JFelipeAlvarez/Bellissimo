@@ -38,6 +38,8 @@ horario:
 # ── Arma tu pasta ────────────────────────────────────────────────────────────
 # El cliente elige una pasta y, si quiere, una salsa y una proteína.
 # El precio del plato es la suma de lo que elige.
+# Fuera del plato armado: las proteínas también se venden solas y las salsas
+# solo como adición ("Adición de salsa Boloñesa"). Las pastas, siempre armadas.
 arma_tu_pasta:
   incluye: pan y queso parmesano
 

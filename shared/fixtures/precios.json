@@ -40,6 +40,18 @@
       "subtotal": 4500
     },
     {
+      "descripcion": "Una proteína se puede pedir sola",
+      "lineas": [{ "tipo": "plato", "id": "salmon" }],
+      "precios_unitarios": [19000],
+      "subtotal": 19000
+    },
+    {
+      "descripcion": "Una salsa no se vende sola, pero sí como adición",
+      "lineas": [{ "tipo": "plato", "id": "salsa-camaron" }],
+      "precios_unitarios": [15000],
+      "subtotal": 15000
+    },
+    {
       "descripcion": "Cantidades: el subtotal multiplica cada línea por su cantidad",
       "lineas": [
         { "tipo": "plato", "id": "lasana-capri", "cantidad": 2 },
@@ -86,13 +98,8 @@
       "codigo": "no_es_proteina"
     },
     {
-      "descripcion": "Las proteínas no se piden sueltas, solo dentro de un plato armado",
-      "lineas": [{ "tipo": "plato", "id": "salmon" }],
-      "codigo": "solo_en_arma_tu_pasta"
-    },
-    {
-      "descripcion": "Las salsas no se piden sueltas",
-      "lineas": [{ "tipo": "plato", "id": "salsa-camaron" }],
+      "descripcion": "Las pastas se piden con Arma tu pasta, aunque sea sin salsa ni proteína",
+      "lineas": [{ "tipo": "plato", "id": "ravioli-carne" }],
       "codigo": "solo_en_arma_tu_pasta"
     },
     {

@@ -20,15 +20,19 @@
       "enlace": "https://wa.me/573150336914?text=Hola%20Bellissimo%2C%20quiero%20hacer%20un%20pedido%20a%20domicilio%3A%0A%0A%E2%80%A2%201%20x%20Fettuccine%20tinta%20de%20calamar%20con%20salsa%20Bolo%C3%B1esa%20%2B%20Alb%C3%B3ndigas%20de%20carne%20%3D%20%2432.500%0A%E2%80%A2%201%20x%20Fettuccine%20al%20huevo%2C%20sin%20salsa%20%3D%20%247.000%0A%E2%80%A2%202%20x%20Coca-Cola%20(Zero)%20%3D%20%249.000%0A%0ASubtotal%3A%20%2448.500%20(m%C3%A1s%20domicilio)%0A%0ANombre%3A%20Ana%20G%C3%B3mez%0ADirecci%C3%B3n%3A%20Calle%2010%20%23%205-20%2C%20apto%20301%0ABarrio%3A%20Centro%0APago%3A%20Efectivo%2C%20pago%20con%20%2450.000%0ANotas%3A%20Sin%20cebolla%2C%20por%20favor%20(timbre%20da%C3%B1ado)"
     },
     {
-      "descripcion": "Pago por transferencia y sin notas",
-      "lineas": [{ "tipo": "plato", "id": "lasana-capri" }],
+      "descripcion": "Pago por transferencia, sin notas, con una proteína sola y una adición de salsa",
+      "lineas": [
+        { "tipo": "plato", "id": "lasana-capri" },
+        { "tipo": "plato", "id": "albondigas-carne" },
+        { "tipo": "plato", "id": "salsa-bolonesa" }
+      ],
       "entrega": {
         "nombre": "Luis",
         "direccion": "Carrera 5 # 12-30",
         "barrio": "La Pola",
         "pago": "transferencia"
       },
-      "mensaje": "Hola Bellissimo, quiero hacer un pedido a domicilio:\n\n• 1 x Lasaña Capri = $25.000\n\nSubtotal: $25.000 (más domicilio)\n\nNombre: Luis\nDirección: Carrera 5 # 12-30\nBarrio: La Pola\nPago: Transferencia",
+      "mensaje": "Hola Bellissimo, quiero hacer un pedido a domicilio:\n\n• 1 x Lasaña Capri = $25.000\n• 1 x Albóndigas de carne = $15.000\n• 1 x Adición de salsa Boloñesa = $10.000\n\nSubtotal: $50.000 (más domicilio)\n\nNombre: Luis\nDirección: Carrera 5 # 12-30\nBarrio: La Pola\nPago: Transferencia",
       "enlace": null
     }
   ]

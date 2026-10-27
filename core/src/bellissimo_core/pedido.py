@@ -2,8 +2,12 @@
 
 Un pedido es una lista de líneas. Cada línea es de uno de dos tipos:
 
-- `plato`: un producto de las secciones de la carta (una lasaña, una bebida...),
-  con su opción si la tiene (Coca-Cola Original o Zero).
+- `plato`: un producto que se pide suelto, con su opción si la tiene
+  (Coca-Cola Original o Zero). Se pueden pedir sueltos:
+    · los productos de las secciones (una lasaña, una bebida...);
+    · las proteínas (unas albóndigas de carne);
+    · las salsas, pero como *adición* ("Adición de salsa Boloñesa").
+  Las pastas no: una pasta siempre se pide como plato armado.
 - `armado`: un plato de "Arma tu pasta": una pasta obligatoria y, si el
   cliente quiere, una salsa y una proteína. Su precio es la suma de las tres.
 
@@ -80,7 +84,7 @@ def precio_unitario(carta: Carta, linea: LineaPlato | LineaArmado) -> int:
     _validar_cantidad(linea.cantidad)
     if isinstance(linea, LineaArmado):
         return _precio_armado(carta, linea)
-    return _plato_de_seccion(carta, linea).precio
+    return _plato_suelto(carta, linea).precio
 
 
 def subtotal(carta: Carta, pedido: Pedido) -> int:
@@ -97,10 +101,13 @@ def describir_linea(carta: Carta, linea: LineaPlato | LineaArmado) -> str:
         "Fettuccine tinta de calamar con salsa Boloñesa + Albóndigas de carne"
         "Fettuccine al huevo, sin salsa"
         "Coca-Cola (Zero)"
+        "Adición de salsa Boloñesa"
     """
     precio_unitario(carta, linea)  # valida antes de describir
     if isinstance(linea, LineaPlato):
         nombre = carta.plato(linea.id).nombre
+        if _es_salsa(carta, linea.id):
+            return f"Adición de salsa {nombre}"
         return f"{nombre} ({linea.opcion})" if linea.opcion else nombre
 
     texto = carta.plato(linea.pasta).nombre
@@ -148,16 +155,28 @@ def _precio_armado(carta: Carta, linea: LineaArmado) -> int:
     return total
 
 
-def _plato_de_seccion(carta: Carta, linea: LineaPlato) -> Plato:
+def _pedibles_sueltos(carta: Carta) -> dict[str, Plato]:
+    """Productos que se pueden pedir sin armar un plato: todo menos las pastas."""
+    atp = carta.arma_tu_pasta
+    sueltos: list[Plato] = [p for s in carta.secciones for p in s.todos_los_platos()]
+    sueltos += atp.proteinas
+    sueltos += atp.todas_las_salsas()  # como adición
+    return {p.id: p for p in sueltos}
+
+
+def _es_salsa(carta: Carta, id_plato: str) -> bool:
+    return any(s.id == id_plato for s in carta.arma_tu_pasta.todas_las_salsas())
+
+
+def _plato_suelto(carta: Carta, linea: LineaPlato) -> Plato:
     """Busca un producto que se pueda pedir suelto y valida su opción."""
-    de_secciones = {p.id: p for s in carta.secciones for p in s.todos_los_platos()}
-    plato = de_secciones.get(linea.id)
+    plato = _pedibles_sueltos(carta).get(linea.id)
 
     if plato is None:
-        if any(p.id == linea.id for p in carta.todos_los_platos()):
+        if any(p.id == linea.id for p in carta.arma_tu_pasta.todas_las_pastas()):
             raise PedidoInvalidoError(
                 "solo_en_arma_tu_pasta",
-                f"'{linea.id}' solo se puede pedir dentro de un plato de Arma tu pasta",
+                f"'{linea.id}' es una pasta: se pide con Arma tu pasta, aunque sea sin salsa",
             )
         raise PedidoInvalidoError("plato_inexistente", f"'{linea.id}' no existe en la carta")
 
