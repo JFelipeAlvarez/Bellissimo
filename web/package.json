@@ -8,16 +8,26 @@
     "node": ">=22"
   },
   "scripts": {
+    "generar": "npm run generar:carta && npm run generar:prueba && npm run generar:tipos",
+    "generar:carta": "uv run --project ../core bellissimo exportar",
+    "generar:prueba": "uv run --project ../core bellissimo exportar --archivo ../shared/fixtures/carta.json --destino src/generated/prueba",
+    "generar:tipos": "json2ts -i src/generated/contrato.schema.json -o src/generated/tipos.ts --additionalProperties false --unknownAny",
+    "predev": "npm run generar",
     "dev": "astro dev",
+    "prebuild": "npm run generar",
     "build": "astro check && astro build",
     "preview": "astro preview",
-    "check": "astro check"
+    "check": "astro check",
+    "pretest": "npm run generar",
+    "test": "vitest run"
   },
   "dependencies": {
     "astro": "7.3.5"
   },
   "devDependencies": {
     "@astrojs/check": "0.9.10",
-    "typescript": "5.9.3"
+    "json-schema-to-typescript": "16.0.0",
+    "typescript": "5.9.3",
+    "vitest": "4.1.12"
   }
 }
