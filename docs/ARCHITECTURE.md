@@ -42,15 +42,25 @@ Paquete `bellissimo_core`.
 | `horario.py` | ¿Está abierto? Próxima apertura y texto para mostrar, siempre en la zona horaria del restaurante. |
 | `whatsapp.py` | Mensaje del pedido y enlace `wa.me`. |
 | `formato.py` | Formato de pesos colombianos (`$32.500`). |
-| `export.py` | *(sesión 4)* Genera `menu.json` y los tipos TypeScript para `web/`. |
-| `cli.py` | Comandos: `validar` (y `exportar` en la sesión 4). |
+| `export.py` | Genera `carta.json` y el JSON Schema del que salen los tipos de TypeScript. |
+| `cli.py` | Comandos: `validar` y `exportar`. |
 
 Todas las funciones de reglas son **puras**: reciben la carta y los datos (incluida la hora actual) como parámetros y no leen nada externo. Por eso se prueban con casos fijos y dan siempre el mismo resultado.
 
 ### `web/` · TypeScript + Astro
-Genera HTML estático en tiempo de build a partir de `menu.json`. Solo lo interactivo (armar la pasta, el carrito) ejecuta JavaScript en el navegador. El mismo sitio sirve dos modos:
+Genera HTML estático en tiempo de build a partir de `carta.json`. Solo lo interactivo (armar la pasta, el pedido) ejecuta JavaScript en el navegador. Ver [ADR 0005](adr/0005-web-astro-html-estatico-y-tipos-generados.md).
 
-- **Domicilio** (`/`): carta, armado de pasta, carrito y envío por WhatsApp.
+| Carpeta | Responsabilidad |
+|---|---|
+| `src/generated/` | *Generado, no se edita.* `carta.json`, `contrato.schema.json` y `tipos.ts`. |
+| `src/lib/` | Reglas en TypeScript, espejo de `core/`: `pedido.ts`, `horario.ts`, `whatsapp.ts`, `formato.ts`. Probadas con Vitest. |
+| `src/components/` | Partes de la página (`.astro`): encabezado, Arma tu pasta, secciones, platos, pie y hoja del pedido. |
+| `src/scripts/` | `carta-interactiva.ts`: el único script del navegador. |
+| `src/pages/index.astro` | La página: une los componentes. |
+
+El mismo sitio sirve dos modos:
+
+- **Domicilio** (`/`): carta, armado de pasta, pedido y envío por WhatsApp.
 - **Mesa** (`/#mesa`): solo lectura, para el QR de las mesas.
 
 ### `shared/fixtures/`
@@ -62,8 +72,8 @@ Abre la versión de imprenta del sitio con Playwright y genera el PDF tabloide c
 ## Flujo de build
 
 ```
-menu.yaml ──► core: validar ──► core: exportar ──► web: astro build ──► dist/ ──► GitHub Pages
-                                                         └──────────► tools/pdf ──► carta.pdf
+menu.yaml ──► core: validar ──► core: exportar ──► carta.json + tipos.ts ──► web: astro build ──► dist/ ──► GitHub Pages
+                                                                                         └──────────► tools/pdf ──► carta.pdf
 ```
 
 En CI (GitHub Actions), cada *pull request* ejecuta: linter y pruebas de Python, chequeo de tipos y pruebas de TypeScript, y el build completo. Al fusionar en `main`, el sitio se publica.
