@@ -56,7 +56,8 @@ Genera HTML estático en tiempo de build a partir de `carta.json`. Solo lo inter
 | `src/lib/` | Reglas en TypeScript, espejo de `core/`: `pedido.ts`, `horario.ts`, `whatsapp.ts`, `formato.ts`. Probadas con Vitest. |
 | `src/components/` | Partes de la página (`.astro`): encabezado, Arma tu pasta, secciones, platos, pie y hoja del pedido. |
 | `src/scripts/` | `carta-interactiva.ts`: el único script del navegador. |
-| `src/pages/index.astro` | La página: une los componentes. |
+| `src/pages/index.astro` | La carta: une los componentes. |
+| `src/pages/qr.astro` | Tarjetas QR para imprimir (`/qr/`), generadas con la dirección pública. Ver [ADR 0006](adr/0006-direccion-publica-y-qr.md). |
 
 El mismo sitio sirve dos modos:
 
@@ -76,7 +77,7 @@ menu.yaml ──► core: validar ──► core: exportar ──► carta.json 
                                                                                          └──────────► tools/pdf ──► carta.pdf
 ```
 
-En CI (GitHub Actions), cada *pull request* ejecuta: linter y pruebas de Python, chequeo de tipos y pruebas de TypeScript, y el build completo. Al fusionar en `main`, el sitio se publica.
+En CI (GitHub Actions), cada *pull request* ejecuta (`ci.yml`): linter y pruebas de Python, chequeo de tipos y pruebas de TypeScript, y el build completo. Al fusionar en `main`, `publicar.yml` vuelve a construir el sitio con la dirección que informa GitHub Pages y lo publica.
 
 ## Evolución prevista
 

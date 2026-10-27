@@ -18,6 +18,8 @@ npm run generar   # vuelve a generar src/generated/ (dev, build y test lo hacen 
 
 Todos necesitan **uv** instalado: `generar` le pide a Python que exporte la carta.
 
+Las **tarjetas QR** para imprimir están en `/qr/` (por ejemplo `http://localhost:4321/bellissimo/qr/`). Imprímelas siempre desde la carta **publicada**: en tu computador los QR apuntan a una dirección por defecto.
+
 Para ver la carta en **modo mesa** (solo lectura, la del QR), agrega `#mesa` al final de la dirección: `http://localhost:4321/bellissimo/#mesa`.
 
 ## Carpetas

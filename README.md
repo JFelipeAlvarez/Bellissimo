@@ -2,6 +2,8 @@
 
 Sistema de carta digital y pedidos a domicilio para **Bellissimo · Pastas para sorprender**, un restaurante de pasta fresca artesanal.
 
+La carta se publica sola en **GitHub Pages** cada vez que un cambio entra a `main`. La dirección aparece en *Settings → Pages* del repositorio; las tarjetas QR para imprimir están en esa misma dirección, terminada en `/qr/`.
+
 La carta del restaurante vive en un solo archivo de datos ([`data/menu.yaml`](data/menu.yaml)). A partir de él se generan automáticamente:
 
 - **La carta web** para celular, donde el cliente arma su pasta y envía el pedido por WhatsApp.
@@ -84,7 +86,7 @@ npm run dev          # abre la carta en http://localhost:4321/bellissimo/
   - [x] Carta como datos validados (`data/menu.yaml`)
   - [x] Reglas de precio, horario y WhatsApp en Python y TypeScript
   - [x] Carta web con Arma tu pasta y pedido por WhatsApp
-  - [ ] Publicación en GitHub Pages y QR para las mesas
+  - [x] Publicación en GitHub Pages y QR para las mesas
   - [ ] PDF de imprenta generado desde los datos
 - [ ] **Fase 2** · Pedidos registrados en base de datos y panel para la cocina (FastAPI + PostgreSQL)
 - [ ] **Fase 3** · Pagos en línea, WhatsApp Business API e integración con el POS
