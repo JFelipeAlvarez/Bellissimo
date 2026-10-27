@@ -1,0 +1,84 @@
+{
+  "restaurante": {
+    "nombre": "Bellissimo",
+    "lema": "Pastas para sorprender",
+    "descripcion": "Pasta fresca artesanal",
+    "direccion": "Calle 8 # 4-51",
+    "whatsapp": "573150336914",
+    "instagram": "bellissimo.pastas",
+    "zona_horaria": "America/Bogota",
+    "alergenos": "Contiene gluten."
+  },
+  "horario": {
+    "lunes": { "abre": "12:30", "cierra": "20:00" },
+    "martes": null,
+    "miercoles": { "abre": "12:30", "cierra": "20:00" },
+    "jueves": { "abre": "12:30", "cierra": "20:00" },
+    "viernes": { "abre": "12:30", "cierra": "20:00" },
+    "sabado": { "abre": "12:30", "cierra": "20:00" },
+    "domingo": { "abre": "12:30", "cierra": "19:00" }
+  },
+  "arma_tu_pasta": {
+    "incluye": "pan y queso parmesano",
+    "pastas": [
+      {
+        "nombre": "Ravioli",
+        "platos": [
+          { "id": "ravioli-carne", "nombre": "Ravioli de carne", "precio": 13000 },
+          { "id": "ravioli-salmon", "nombre": "Ravioli de salmón", "precio": 18000 }
+        ]
+      },
+      {
+        "nombre": "Pastas largas",
+        "platos": [
+          { "id": "fettuccine-huevo", "nombre": "Fettuccine al huevo", "precio": 7000 },
+          { "id": "fettuccine-tinta-calamar", "nombre": "Fettuccine tinta de calamar", "precio": 7500 }
+        ]
+      }
+    ],
+    "salsas": [
+      {
+        "nombre": "Rojas",
+        "color": "roja",
+        "platos": [{ "id": "salsa-bolonesa", "nombre": "Boloñesa", "precio": 10000 }]
+      },
+      {
+        "nombre": "Blancas",
+        "color": "blanca",
+        "platos": [
+          { "id": "salsa-bellissimo", "nombre": "Bellissimo", "precio": 10000, "de_la_casa": true },
+          { "id": "salsa-camaron", "nombre": "Camarón", "precio": 15000 }
+        ]
+      }
+    ],
+    "proteinas": [
+      { "id": "albondigas-carne", "nombre": "Albóndigas de carne", "precio": 15000 },
+      { "id": "salmon", "nombre": "Salmón", "precio": 19000 }
+    ]
+  },
+  "secciones": [
+    {
+      "id": "horno",
+      "titulo": "Lasañas y canelones",
+      "platos": [{ "id": "lasana-capri", "nombre": "Lasaña Capri", "precio": 25000 }]
+    },
+    {
+      "id": "bebidas",
+      "titulo": "Bebidas",
+      "grupos": [
+        {
+          "nombre": "Gaseosas",
+          "platos": [
+            { "id": "coca-cola", "nombre": "Coca-Cola", "precio": 4500, "opciones": ["Original", "Zero"] },
+            { "id": "limonada-natural", "nombre": "Limonada natural", "precio": 3000 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "adicionales",
+      "titulo": "Adicionales",
+      "platos": [{ "id": "porcion-pan", "nombre": "Porción de pan", "precio": 1000 }]
+    }
+  ]
+}

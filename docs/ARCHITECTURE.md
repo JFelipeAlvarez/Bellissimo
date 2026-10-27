@@ -36,13 +36,16 @@ Paquete `bellissimo_core`.
 
 | Módulo | Responsabilidad |
 |---|---|
-| `models.py` | Modelos Pydantic: `Carta`, `Seccion`, `Plato`, `Opcion`, `Horario`. |
+| `models.py` | Modelos Pydantic de la carta: `Carta`, `Seccion`, `Plato`, `Horario`… |
 | `loader.py` | Lee `menu.yaml` y lo convierte en modelos validados. |
-| `pricing.py` | Reglas de precio, por ejemplo el plato armado (pasta + salsa + proteína). |
-| `schedule.py` | ¿Está abierto el restaurante en un momento dado? (Zona horaria de Bogotá.) |
-| `whatsapp.py` | Construye el texto del pedido. |
-| `export.py` | Genera `menu.json` y los tipos TypeScript para `web/`. |
-| `cli.py` | Comandos: `validar`, `exportar`. |
+| `pedido.py` | Pedidos y reglas de precio: platos sueltos, plato armado (pasta + salsa + proteína), opciones y cantidades. Errores con código estable. |
+| `horario.py` | ¿Está abierto? Próxima apertura y texto para mostrar, siempre en la zona horaria del restaurante. |
+| `whatsapp.py` | Mensaje del pedido y enlace `wa.me`. |
+| `formato.py` | Formato de pesos colombianos (`$32.500`). |
+| `export.py` | *(sesión 4)* Genera `menu.json` y los tipos TypeScript para `web/`. |
+| `cli.py` | Comandos: `validar` (y `exportar` en la sesión 4). |
+
+Todas las funciones de reglas son **puras**: reciben la carta y los datos (incluida la hora actual) como parámetros y no leen nada externo. Por eso se prueban con casos fijos y dan siempre el mismo resultado.
 
 ### `web/` · TypeScript + Astro
 Genera HTML estático en tiempo de build a partir de `menu.json`. Solo lo interactivo (armar la pasta, el carrito) ejecuta JavaScript en el navegador. El mismo sitio sirve dos modos:
