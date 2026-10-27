@@ -1,0 +1,64 @@
+# Publicación: cada vez que algo entra a main, se construye la carta y se
+# publica en GitHub Pages. También se puede lanzar a mano desde la pestaña
+# Actions ("Run workflow"), por ejemplo después de activar Pages.
+name: Publicar
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# GitHub Pages pide estos permisos: escribir en Pages y demostrar con un
+# token (id-token) que la publicación viene de este repositorio.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Nunca dos publicaciones a la vez; si llega otra, espera a que termine la actual.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  construir:
+    name: Construir la carta
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+      # Pregunta a GitHub Pages la dirección real del sitio (ADR 0006).
+      - id: pages
+        uses: actions/configure-pages@v5
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - name: Instalar dependencias
+        run: npm ci
+      - name: Pruebas (vitest)
+        run: npm test
+      - name: Build
+        run: npm run build
+        env:
+          SITIO_URL: ${{ steps.pages.outputs.base_url }}
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: web/dist
+
+  publicar:
+    name: Publicar en GitHub Pages
+    needs: construir
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.despliegue.outputs.page_url }}
+    steps:
+      - id: despliegue
+        uses: actions/deploy-pages@v4

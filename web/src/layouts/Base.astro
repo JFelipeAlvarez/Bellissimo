@@ -2,17 +2,20 @@
 /**
  * Estructura común de las páginas: <head>, fuentes, íconos y estilos.
  */
+import { urlCarta } from "../lib/enlaces";
 import "../styles/global.css";
 
 interface Props {
   titulo: string;
   descripcion: string;
+  /** false en páginas internas (como la de los QR): los buscadores no las muestran. */
+  indexar?: boolean;
 }
 
-const { titulo, descripcion } = Astro.props;
-// BASE_URL es "/bellissimo/" en GitHub Pages (ver astro.config.mjs).
+const { titulo, descripcion, indexar = true } = Astro.props;
+// BASE_URL es la subcarpeta del sitio, por ejemplo "/Bellissimo/" (ver astro.config.mjs).
 const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
-const canonica = new URL(base, Astro.site);
+const canonica = urlCarta(Astro.site ?? "http://localhost", base);
 ---
 
 <!doctype html>
@@ -22,6 +25,7 @@ const canonica = new URL(base, Astro.site);
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{titulo}</title>
     <meta name="description" content={descripcion} />
+    {!indexar && <meta name="robots" content="noindex" />}
     <link rel="canonical" href={canonica} />
     <meta name="theme-color" content="#F7F1E6" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#1A1311" media="(prefers-color-scheme: dark)" />
@@ -32,7 +36,7 @@ const canonica = new URL(base, Astro.site);
     <meta property="og:title" content={titulo} />
     <meta property="og:description" content={descripcion} />
     <meta property="og:url" content={canonica} />
-    <meta property="og:image" content={new URL(`${base}apple-touch-icon.png`, Astro.site)} />
+    <meta property="og:image" content={new URL("apple-touch-icon.png", canonica)} />
     <meta property="og:locale" content="es_CO" />
 
     <link rel="icon" type="image/png" href={`${base}favicon.png`} />
