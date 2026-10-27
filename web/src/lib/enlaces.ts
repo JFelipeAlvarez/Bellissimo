@@ -18,8 +18,3 @@ export function urlCarta(sitio: URL | string, base: string, modo: Modo = "domici
   if (modo === "mesa") url.hash = "mesa";
   return url.href;
 }
-
-/** URL sin "https://" ni la barra final, para escribirla bajo el QR. */
-export function urlLegible(url: string): string {
-  return url.replace(/^https?:\/\//, "").replace(/\/$/, "");
-}

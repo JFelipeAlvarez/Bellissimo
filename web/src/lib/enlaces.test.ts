@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { urlCarta, urlLegible } from "./enlaces";
+import { urlCarta } from "./enlaces";
 
 describe("urlCarta", () => {
   it("arma la dirección de GitHub Pages con barra final", () => {
@@ -20,14 +20,6 @@ describe("urlCarta", () => {
   it("funciona con un dominio propio, sin subcarpeta", () => {
     expect(urlCarta("https://bellissimo.com.co", "/", "mesa")).toBe(
       "https://bellissimo.com.co/#mesa",
-    );
-  });
-});
-
-describe("urlLegible", () => {
-  it("quita el protocolo y la barra final", () => {
-    expect(urlLegible("https://jfelipealvarez.github.io/Bellissimo/")).toBe(
-      "jfelipealvarez.github.io/Bellissimo",
     );
   });
 });

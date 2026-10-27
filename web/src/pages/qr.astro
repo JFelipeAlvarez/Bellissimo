@@ -13,7 +13,7 @@
 import QRCode from "qrcode";
 import Base from "../layouts/Base.astro";
 import { carta } from "../lib/carta";
-import { urlCarta, urlLegible, type Modo } from "../lib/enlaces";
+import { urlCarta, type Modo } from "../lib/enlaces";
 import { formatearTelefono } from "../lib/formato";
 
 const { restaurante } = carta;
@@ -35,7 +35,8 @@ interface Tarjeta {
   modo: Modo;
   titulo: string;
   instruccion: string;
-  pie: string;
+  /** Texto al pie de la tarjeta; null = sin texto. */
+  pie: string | null;
   url: string;
   svg: string;
 }
@@ -47,7 +48,7 @@ const tarjetas: Tarjeta[] = await Promise.all(
         modo: "mesa",
         titulo: "Nuestra carta",
         instruccion: "Escanea con la cámara de tu celular",
-        pie: "Haz tu pedido en la caja o con nuestro personal",
+        pie: null,
       },
       {
         modo: "domicilio",
@@ -105,8 +106,7 @@ const esLocal = new URL(sitio).hostname === "localhost";
             <h2>{t.titulo}</h2>
             <div class="qr" set:html={t.svg} />
             <p class="instruccion">{t.instruccion}</p>
-            <p class="url">{urlLegible(t.url)}</p>
-            <p class="pie">{t.pie}</p>
+            {t.pie && <p class="pie">{t.pie}</p>}
           </article>
         ))}
       </section>
@@ -194,6 +194,8 @@ const esLocal = new URL(sitio).hostname === "localhost";
     display: flex;
     flex-direction: column;
     align-items: center;
+    /* Centrado vertical; si hay pie, su margin-top: auto lo baja al borde. */
+    justify-content: center;
     text-align: center;
   }
 
@@ -227,13 +229,6 @@ const esLocal = new URL(sitio).hostname === "localhost";
     margin: 0.4cm 0 0.1cm;
     font-size: 11.5pt;
     font-weight: 600;
-  }
-
-  .url {
-    margin: 0;
-    font-size: 8pt;
-    color: #6e5a4e;
-    word-break: break-all;
   }
 
   .pie {
