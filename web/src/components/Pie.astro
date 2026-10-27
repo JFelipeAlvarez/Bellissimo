@@ -1,0 +1,62 @@
+---
+import { carta } from "../lib/carta";
+import { formatearTelefono } from "../lib/formato";
+import { resumenHorario } from "../lib/horario";
+import Icono from "./Icono.astro";
+
+const { restaurante, horario } = carta;
+const mapa = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+  `${restaurante.nombre} ${restaurante.direccion}`,
+)}`;
+---
+
+<footer class="info">
+  <div class="wrap info-grid">
+    <div class="info-row">
+      <Icono nombre="mapa" tamano={22} grosor={1.8} />
+      <div>
+        <div class="info-label">Visítanos</div>
+        <div class="info-val"><a href={mapa} target="_blank" rel="noopener">{restaurante.direccion}</a></div>
+      </div>
+    </div>
+    <div class="info-row">
+      <Icono nombre="whatsapp" tamano={22} grosor={1.8} />
+      <div>
+        <div class="info-label">WhatsApp</div>
+        <div class="info-val">
+          <a href={`https://wa.me/${restaurante.whatsapp}`} target="_blank" rel="noopener">
+            {formatearTelefono(restaurante.whatsapp)}
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="info-row">
+      <Icono nombre="instagram" tamano={22} grosor={1.8} />
+      <div>
+        <div class="info-label">Instagram</div>
+        <div class="info-val">
+          <a href={`https://www.instagram.com/${restaurante.instagram}/`} target="_blank" rel="noopener">
+            @{restaurante.instagram}
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="info-row">
+      <Icono nombre="reloj" tamano={22} grosor={1.8} />
+      <div>
+        <div class="info-label">Horario</div>
+        <dl class="hours" id="horario">
+          {
+            resumenHorario(horario).map((r) => (
+              <>
+                <dt data-dias={r.indices.join(",")}>{r.dias}</dt>
+                <dd>{r.horas}</dd>
+              </>
+            ))
+          }
+        </dl>
+      </div>
+    </div>
+    <p class="allergen">{restaurante.alergenos}</p>
+  </div>
+</footer>

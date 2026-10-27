@@ -86,7 +86,14 @@ def _zona_horaria_valida(nombre: str) -> str:
 class Modelo(BaseModel):
     """Configuración común a todos los modelos de la carta."""
 
-    model_config = ConfigDict(frozen=True, extra="forbid")
+    model_config = ConfigDict(
+        frozen=True,
+        extra="forbid",
+        # En el JSON Schema de salida (lo que exporta Python), los campos con
+        # valor por defecto también son obligatorios: carta.json siempre los
+        # trae, así TypeScript no tiene que preguntar si existen.
+        json_schema_serialization_defaults_required=True,
+    )
 
 
 # ── Información del restaurante ─────────────────────────────────────────────
@@ -221,6 +228,8 @@ class Seccion(Modelo):
 
     id: Id
     titulo: Texto
+    pestana: Texto | None = None
+    """Texto corto para la pestaña de la web; si falta, se usa el título."""
     nota: Texto | None = None
     incluye: Texto | None = None
     platos: tuple[Plato, ...] = ()

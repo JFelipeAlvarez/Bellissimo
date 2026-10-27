@@ -1,0 +1,40 @@
+---
+import { carta } from "../lib/carta";
+import Icono from "./Icono.astro";
+
+const { restaurante } = carta;
+const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
+---
+
+<header class="wrap hero">
+  <h1 class="plate">
+    <img
+      src={`${base}logo.webp`}
+      alt={`${restaurante.nombre}, ${restaurante.lema.toLowerCase()}`}
+      width="132"
+      height="111"
+    />
+  </h1>
+  <p class="tagline">{restaurante.descripcion}</p>
+  <!-- Sin JavaScript se ve la dirección; el script la cambia por "Abierto · …". -->
+  <p class="status" id="estado" role="status">
+    <i></i><span id="estado-texto">{restaurante.direccion}</span>
+  </p>
+</header>
+
+<div class="wrap">
+  <p class="notice only-delivery">
+    <Icono nombre="whatsapp" />
+    <span>
+      <strong>Pide a domicilio en 3 toques.</strong> Elige tus platos, toca “Ver pedido” y envíalo por
+      WhatsApp. El valor del domicilio te lo confirmamos según tu barrio.
+    </span>
+  </p>
+  <p class="notice only-mesa">
+    <Icono nombre="info" />
+    <span>
+      <strong>Bienvenido a {restaurante.nombre}.</strong> Mira la carta con calma y haz tu pedido en
+      la caja o con nuestro personal.
+    </span>
+  </p>
+</div>

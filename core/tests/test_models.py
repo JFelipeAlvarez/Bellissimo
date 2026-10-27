@@ -127,6 +127,12 @@ def test_seccion_vacia(carta_minima: dict[str, Any]) -> None:
     assert "`platos` o `grupos`" in error
 
 
+def test_pestana_es_opcional(carta_minima: dict[str, Any]) -> None:
+    assert validar_datos(carta_minima).secciones[0].pestana is None
+    carta_minima["secciones"][0]["pestana"] = "Dulces"
+    assert validar_datos(carta_minima).secciones[0].pestana == "Dulces"
+
+
 def test_opciones_repetidas(carta_minima: dict[str, Any]) -> None:
     carta_minima["secciones"][0]["platos"][0]["opciones"] = ["Clásico", "Clásico"]
     (error,) = errores_de(carta_minima)

@@ -1,0 +1,44 @@
+---
+/**
+ * Un plato de la carta. En modo domicilio muestra las opciones (si tiene) y
+ * el botón "Agregar"; en modo mesa (#mesa), solo nombre, descripción y precio.
+ */
+import type { Plato } from "../generated/tipos";
+import { formatearPesos } from "../lib/formato";
+import Icono from "./Icono.astro";
+
+interface Props {
+  plato: Plato;
+}
+
+const { plato } = Astro.props;
+const tieneOpciones = plato.opciones.length > 0;
+---
+
+<article class="item" data-plato={plato.id}>
+  <h4 class="item-name">{plato.nombre}</h4>
+  <p class="item-price money">{formatearPesos(plato.precio)}</p>
+  {plato.descripcion && <p class="item-desc">{plato.descripcion}</p>}
+  {
+    tieneOpciones && (
+      <>
+        <p class="item-desc only-mesa">{plato.opciones.join(" · ")}</p>
+        <fieldset class="chips only-delivery">
+          <legend class="visually-hidden">Opciones de {plato.nombre}</legend>
+          {plato.opciones.map((opcion, i) => (
+            <label class="chip">
+              <input type="radio" name={`opcion-${plato.id}`} value={opcion} checked={i === 0} />
+              {opcion}
+            </label>
+          ))}
+        </fieldset>
+      </>
+    )
+  }
+  <div class="item-actions only-delivery">
+    <button type="button" class="btn-add" data-agregar={plato.id}>
+      <Icono nombre="mas" tamano={18} grosor={2.2} />Agregar<span class="visually-hidden"> {plato.nombre}</span>
+    </button>
+    <span class="in-cart" data-en-pedido={plato.id}></span>
+  </div>
+</article>

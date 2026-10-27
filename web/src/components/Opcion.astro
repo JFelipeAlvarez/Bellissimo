@@ -1,0 +1,32 @@
+---
+/**
+ * Una opción (radio) de Arma tu pasta: nombre, descripción y precio.
+ * `valor` vacío significa "sin salsa" o "sin proteína".
+ */
+import { formatearPesos } from "../lib/formato";
+
+interface Props {
+  grupo: "pasta" | "salsa" | "proteina";
+  valor: string;
+  nombre: string;
+  precio?: number;
+  descripcion?: string | null;
+  deLaCasa?: boolean;
+  marcada?: boolean;
+}
+
+const { grupo, valor, nombre, precio, descripcion, deLaCasa = false, marcada = false } = Astro.props;
+const id = `${grupo}-${valor || "ninguna"}`;
+---
+
+<label class:list={["opt", { "opt-none": !valor }]} for={id}>
+  <input type="radio" name={grupo} id={id} value={valor} checked={marcada} required={grupo === "pasta"} />
+  <span class="opt-text">
+    <span class="opt-name">
+      {nombre}
+      {deLaCasa && <span class="house">De la casa</span>}
+    </span>
+    {descripcion && <span class="opt-desc">{descripcion}</span>}
+  </span>
+  <span class="opt-price money">{precio !== undefined && formatearPesos(precio)}</span>
+</label>

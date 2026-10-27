@@ -49,6 +49,11 @@ jobs:
         working-directory: web
     steps:
       - uses: actions/checkout@v4
+      # uv hace falta aquí también: `npm run generar` llama a Python para
+      # exportar la carta y los tipos antes de probar y compilar.
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -56,5 +61,7 @@ jobs:
           cache-dependency-path: web/package-lock.json
       - name: Instalar dependencias
         run: npm ci
+      - name: Pruebas (vitest)
+        run: npm test
       - name: Tipos y build (astro)
         run: npm run build

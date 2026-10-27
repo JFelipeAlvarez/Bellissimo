@@ -172,6 +172,7 @@ arma_tu_pasta:
 secciones:
   - id: horno
     titulo: Lasañas y canelones
+    pestana: Lasañas
     nota: Pasta fresca en capas, gratinada con queso.
     incluye: pan
     platos:
@@ -230,6 +231,7 @@ secciones:
 
   - id: ninos
     titulo: Menú para niños
+    pestana: Niños
     platos:
       - id: lonchera-bambino
         nombre: Lonchera Bambino

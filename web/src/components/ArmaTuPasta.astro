@@ -1,0 +1,128 @@
+---
+/**
+ * Arma tu pasta: tres pasos (pasta, salsa, proteína) dentro de un <form>.
+ *
+ * Es un formulario de verdad: los radios del mismo `name` ya se excluyen
+ * entre sí, el teclado funciona sin código extra, y el script lee lo
+ * elegido con `new FormData(form)`.
+ */
+import { carta } from "../lib/carta";
+import { formatearPesos } from "../lib/formato";
+import Icono from "./Icono.astro";
+import Opcion from "./Opcion.astro";
+
+const atp = carta.arma_tu_pasta;
+
+// "Cada salsa $10.000; Camarón $15.000": el precio más común y las excepciones,
+// calculados desde los datos para que nunca queden desactualizados.
+const salsas = atp.salsas.flatMap((g) => g.platos);
+const conteo = new Map<number, number>();
+for (const s of salsas) conteo.set(s.precio, (conteo.get(s.precio) ?? 0) + 1);
+const [precioComun] = [...conteo.entries()].sort((a, b) => b[1] - a[1])[0] ?? [0];
+const excepciones = salsas
+  .filter((s) => s.precio !== precioComun)
+  .map((s) => `${s.nombre} ${formatearPesos(s.precio)}`);
+const notaSalsas = [`Cada salsa ${formatearPesos(precioComun)}`, ...excepciones].join("; ") + ".";
+
+// "Ravioli o pastas largas."
+const notaPastas = atp.pastas.map((g, i) => (i === 0 ? g.nombre : g.nombre.toLowerCase())).join(" o ") + ".";
+---
+
+<section class="menu" id="arma-tu-pasta" aria-labelledby="titulo-arma">
+  <div class="sec-head"><h2 id="titulo-arma">Arma tu pasta</h2></div>
+  <p class="sec-note">Elige tu pasta, tu salsa y, si quieres, una proteína. Pagas solo lo que eliges.</p>
+
+  <form class="builder" id="armar">
+    <fieldset class="step">
+      <legend><span class="num">1</span><span class="step-title">Elige tu pasta</span></legend>
+      <p class="step-sub">{notaPastas}</p>
+      {
+        atp.pastas.map((grupo) => (
+          <>
+            <h3>{grupo.nombre}</h3>
+            <div class="opts">
+              {grupo.platos.map((p) => (
+                <Opcion grupo="pasta" valor={p.id} nombre={p.nombre} precio={p.precio} descripcion={p.descripcion} />
+              ))}
+            </div>
+          </>
+        ))
+      }
+    </fieldset>
+
+    <fieldset class="step">
+      <legend><span class="num">2</span><span class="step-title">Elige tu salsa</span></legend>
+      <p class="step-sub">{notaSalsas}</p>
+      {
+        atp.salsas.map((grupo) => (
+          <>
+            <h3>
+              <span class={`dot dot-${grupo.color}`} />
+              {grupo.nombre}
+            </h3>
+            <div class="opts">
+              {grupo.platos.map((s) => (
+                <Opcion
+                  grupo="salsa"
+                  valor={s.id}
+                  nombre={s.nombre}
+                  precio={s.precio}
+                  descripcion={s.descripcion}
+                  deLaCasa={s.de_la_casa}
+                />
+              ))}
+            </div>
+          </>
+        ))
+      }
+      <div class="opts"><Opcion grupo="salsa" valor="" nombre="Sin salsa" marcada /></div>
+    </fieldset>
+
+    <fieldset class="step">
+      <legend><span class="num">3</span><span class="step-title">Agrega tu proteína</span></legend>
+      <p class="step-sub">Opcional.</p>
+      <div class="opts">
+        {
+          atp.proteinas.map((p) => (
+            <Opcion grupo="proteina" valor={p.id} nombre={p.nombre} precio={p.precio} descripcion={p.descripcion} />
+          ))
+        }
+        <Opcion grupo="proteina" valor="" nombre="Sin proteína" marcada />
+      </div>
+    </fieldset>
+
+    <div class="builder-foot">
+      <p class="incl"><Icono nombre="check" tamano={18} grosor={2.2} />Tu pasta viene con {atp.incluye}.</p>
+      <p class="summary" id="armar-resumen" aria-live="polite">Empieza eligiendo tu pasta.</p>
+      <div class="total-row">
+        <p class="total money"><span id="armar-total">$0</span><small>Total de tu plato</small></p>
+        <button class="btn-primary only-delivery" type="submit" id="armar-agregar" disabled>
+          <Icono nombre="mas" tamano={18} grosor={2.2} />Agregar al pedido
+        </button>
+      </div>
+    </div>
+  </form>
+
+  <!--
+    Regla del negocio: las proteínas se pueden pedir solas, y las salsas solo
+    como adición (porción aparte). Las pastas no: siempre van por "Arma tu pasta".
+  -->
+  <div class="aparte">
+    <h3>¿Solo la salsa o la proteína?</h3>
+    <p>Pide una porción de salsa como adición o una proteína sola, al mismo precio de arriba.</p>
+    <div class="aparte-fila only-delivery">
+      <label for="aparte-elegir" class="visually-hidden">Salsa o proteína</label>
+      <select id="aparte-elegir">
+        <optgroup label="Porción de salsa">
+          {salsas.map((s) => <option value={s.id}>Salsa {s.nombre} · {formatearPesos(s.precio)}</option>)}
+        </optgroup>
+        <optgroup label="Proteína sola">
+          {atp.proteinas.map((p) => <option value={p.id}>{p.nombre} · {formatearPesos(p.precio)}</option>)}
+        </optgroup>
+      </select>
+      <button type="button" class="btn-add" id="aparte-agregar">
+        <Icono nombre="mas" tamano={18} grosor={2.2} />Agregar
+      </button>
+    </div>
+  </div>
+</section>

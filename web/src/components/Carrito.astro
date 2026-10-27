@@ -1,0 +1,114 @@
+---
+/**
+ * Barra "Ver pedido", hoja del pedido (<dialog>) y avisos (toast).
+ *
+ * Las filas del pedido se crean en el navegador a partir de la <template>:
+ * el HTML vive aquí y el script solo copia la plantilla y llena textos.
+ */
+import { carta } from "../lib/carta";
+import { formatearTelefono } from "../lib/formato";
+import Icono from "./Icono.astro";
+
+const telefono = formatearTelefono(carta.restaurante.whatsapp);
+---
+
+<div class="order-bar only-delivery" id="barra-pedido" hidden>
+  <button class="btn-primary" id="abrir-pedido" type="button" aria-haspopup="dialog">
+    <span style="display:flex;align-items:center;gap:10px">
+      <span class="badge" id="barra-cantidad">0</span>Ver pedido
+    </span>
+    <span class="money" id="barra-total">$0</span>
+  </button>
+</div>
+
+<dialog class="cart" id="pedido" aria-labelledby="pedido-titulo">
+  <div class="sheet">
+    <div class="sheet-head">
+      <h2 id="pedido-titulo">Tu pedido</h2>
+      <button class="icon-btn" type="button" id="cerrar-pedido" aria-label="Cerrar">
+        <Icono nombre="cerrar" />
+      </button>
+    </div>
+
+    <div class="sheet-body">
+      <p class="empty" id="pedido-vacio">Tu pedido está vacío. Agrega platos desde la carta.</p>
+      <div id="lineas"></div>
+      <div class="totals" id="totales">
+        <span>Subtotal</span><span class="money" id="subtotal">$0</span>
+        <span class="hint">Domicilio</span><span class="hint">Según tu barrio</span>
+        <span class="grand">Total</span><span class="grand money"><span id="total">$0</span> + domicilio</span>
+      </div>
+
+      <form class="delivery" id="entrega" novalidate>
+        <h3>Datos para el domicilio</h3>
+        <div class="field">
+          <label for="e-nombre">Nombre</label>
+          <input id="e-nombre" name="nombre" autocomplete="name" maxlength="300" required enterkeyhint="next" aria-describedby="e-nombre-err" />
+          <span class="err" id="e-nombre-err" hidden>Escribe tu nombre.</span>
+        </div>
+        <div class="field">
+          <label for="e-direccion">Dirección</label>
+          <input
+            id="e-direccion"
+            name="direccion"
+            autocomplete="street-address"
+            maxlength="300"
+            required
+            placeholder="Ej: Calle 10 # 5-20, apto 301"
+            enterkeyhint="next"
+            aria-describedby="e-direccion-err"
+          />
+          <span class="err" id="e-direccion-err" hidden>Escribe la dirección de entrega.</span>
+        </div>
+        <div class="field">
+          <label for="e-barrio">Barrio</label>
+          <input id="e-barrio" name="barrio" maxlength="300" required enterkeyhint="next" aria-describedby="e-barrio-err" />
+          <span class="err" id="e-barrio-err" hidden>Escribe tu barrio para calcular el domicilio.</span>
+        </div>
+        <fieldset class="field">
+          <legend>¿Cómo vas a pagar?</legend>
+          <div class="chips pay">
+            <label class="chip"><input type="radio" name="pago" value="efectivo" checked />Efectivo</label>
+            <label class="chip"><input type="radio" name="pago" value="transferencia" />Transferencia</label>
+          </div>
+        </fieldset>
+        <div class="field" id="campo-paga-con">
+          <label for="e-paga-con">¿Con cuánto pagas? <span class="hint">(opcional, para llevarte el cambio)</span></label>
+          <input id="e-paga-con" name="paga_con" inputmode="numeric" maxlength="12" placeholder="Ej: 50.000" />
+        </div>
+        <div class="field">
+          <label for="e-notas">Notas <span class="hint">(opcional)</span></label>
+          <textarea id="e-notas" name="notas" maxlength="300" placeholder="Ej: sin cebolla, timbre dañado, llamar al llegar"></textarea>
+        </div>
+      </form>
+    </div>
+
+    <div class="sheet-foot">
+      <p class="closed-warn" id="aviso-cerrado" hidden></p>
+      <a class="btn-primary" id="enviar" href={`https://wa.me/${carta.restaurante.whatsapp}`} target="_blank" rel="noopener">
+        <Icono nombre="whatsapp" />Enviar pedido por WhatsApp
+      </a>
+      <button class="btn-ghost" type="button" id="copiar">Copiar pedido</button>
+      <p class="hint" style="margin:0;text-align:center">
+        Se abrirá WhatsApp con tu pedido escrito. Solo tienes que tocar enviar.
+      </p>
+    </div>
+  </div>
+</dialog>
+
+<template id="plantilla-linea">
+  <div class="line">
+    <div class="line-name"></div>
+    <div class="line-total money"></div>
+    <div class="line-bottom">
+      <span class="hint money line-unit"></span>
+      <span class="qty">
+        <button type="button" data-accion="quitar">−</button>
+        <output></output>
+        <button type="button" data-accion="sumar">+</button>
+      </span>
+    </div>
+  </div>
+</template>
+
+<div class="toast" id="aviso" role="status" aria-live="polite" data-telefono={telefono}></div>

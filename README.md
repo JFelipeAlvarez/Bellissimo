@@ -66,7 +66,8 @@ cd ..
 # Sitio web
 cd web
 npm ci               # instala dependencias exactas del package-lock.json
-npm run dev          # abre la carta en http://localhost:4321
+npm test             # pruebas de las reglas en TypeScript
+npm run dev          # abre la carta en http://localhost:4321/bellissimo/
 ```
 
 ## Cómo trabajamos
@@ -80,6 +81,11 @@ npm run dev          # abre la carta en http://localhost:4321
 
 - [x] **Fase 0** · Estructura del proyecto, herramientas y documentación
 - [ ] **Fase 1** · Carta como datos, carta web con pedidos por WhatsApp, publicación automática y PDF de imprenta
+  - [x] Carta como datos validados (`data/menu.yaml`)
+  - [x] Reglas de precio, horario y WhatsApp en Python y TypeScript
+  - [x] Carta web con Arma tu pasta y pedido por WhatsApp
+  - [ ] Publicación en GitHub Pages y QR para las mesas
+  - [ ] PDF de imprenta generado desde los datos
 - [ ] **Fase 2** · Pedidos registrados en base de datos y panel para la cocina (FastAPI + PostgreSQL)
 - [ ] **Fase 3** · Pagos en línea, WhatsApp Business API e integración con el POS
 - [ ] **Fase 4** · IA: pronóstico de demanda de pasta fresca y asistente de pedidos

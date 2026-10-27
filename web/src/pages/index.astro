@@ -1,40 +1,48 @@
 ---
-// Página temporal de la fase 0. En la fase 1 se reemplaza por la carta,
-// generada a partir de los datos que exporta core/.
-const titulo = "Bellissimo";
-const lema = "Pastas para sorprender";
+/**
+ * La carta. Todo el HTML se genera aquí, en el build, a partir de
+ * data/menu.yaml (vía carta.json). El celular del cliente recibe la carta
+ * ya escrita: carga rápido y se puede leer aunque el JavaScript falle.
+ * El script del final solo agrega lo interactivo.
+ */
+import ArmaTuPasta from "../components/ArmaTuPasta.astro";
+import Carrito from "../components/Carrito.astro";
+import Encabezado from "../components/Encabezado.astro";
+import Pie from "../components/Pie.astro";
+import Seccion from "../components/Seccion.astro";
+import Base from "../layouts/Base.astro";
+import { carta } from "../lib/carta";
+
+const { restaurante, secciones } = carta;
+const pestanas = [
+  { id: "arma-tu-pasta", texto: "Arma tu pasta" },
+  ...secciones.map((s) => ({ id: s.id, texto: s.pestana ?? s.titulo })),
+];
 ---
 
-<html lang="es">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{titulo}</title>
-  </head>
-  <body>
-    <main>
-      <h1>{titulo}</h1>
-      <p>{lema}</p>
-      <p>Nuestra carta digital está en construcción.</p>
-    </main>
-  </body>
-</html>
+<Base
+  titulo={`${restaurante.nombre} · ${restaurante.lema}`}
+  descripcion={`Carta de ${restaurante.nombre}: ${restaurante.descripcion.toLowerCase()}. Arma tu pasta y pide a domicilio por WhatsApp. ${restaurante.direccion}.`}
+>
+  <Encabezado />
 
-<style>
-  body {
-    margin: 0;
-    min-height: 100svh;
-    display: grid;
-    place-items: center;
-    background: #f7f1e6;
-    color: #2a1f1b;
-    font-family: Georgia, "Times New Roman", serif;
-    text-align: center;
-  }
-  h1 {
-    margin: 0;
-    color: #6b1e2a;
-    font-style: italic;
-    font-size: 3rem;
-  }
-</style>
+  <nav class="tabs-bar" aria-label="Secciones de la carta">
+    <div class="wrap">
+      <div class="tabs" id="pestanas">
+        {pestanas.map((p) => <a class="tab" href={`#${p.id}`} data-destino={p.id}>{p.texto}</a>)}
+      </div>
+    </div>
+  </nav>
+
+  <main class="wrap" id="carta">
+    <ArmaTuPasta />
+    {secciones.map((s) => <Seccion seccion={s} />)}
+  </main>
+
+  <Pie />
+  <Carrito />
+</Base>
+
+<script>
+  import "../scripts/carta-interactiva";
+</script>
