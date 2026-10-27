@@ -1,0 +1,41 @@
+---
+import type { Seccion } from "../generated/tipos";
+import Plato from "./Plato.astro";
+
+interface Props {
+  seccion: Seccion;
+}
+
+const { seccion } = Astro.props;
+const idTitulo = `titulo-${seccion.id}`;
+---
+
+<section class="menu" id={seccion.id} aria-labelledby={idTitulo}>
+  <div class="sec-head">
+    <h2 id={idTitulo}>{seccion.titulo}</h2>
+    {seccion.incluye && <span class="sec-tag">Incluye {seccion.incluye}</span>}
+  </div>
+  {seccion.nota && <p class="sec-note">{seccion.nota}</p>}
+
+  {
+    seccion.platos.length > 0 && (
+      <div class="list">
+        {seccion.platos.map((plato) => (
+          <Plato plato={plato} />
+        ))}
+      </div>
+    )
+  }
+  {
+    seccion.grupos.map((grupo) => (
+      <>
+        <h3>{grupo.nombre}</h3>
+        <div class="list">
+          {grupo.platos.map((plato) => (
+            <Plato plato={plato} />
+          ))}
+        </div>
+      </>
+    ))
+  }
+</section>
