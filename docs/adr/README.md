@@ -14,6 +14,7 @@ Reglas:
 | [0003](0003-sitio-estatico-sin-backend.md) | Sitio estático sin backend en la fase 1 | Aceptada |
 | [0004](0004-precios-enteros-y-validacion-estricta.md) | Precios como enteros y validación estricta de la carta | Aceptada |
 | [0005](0005-web-astro-html-estatico-y-tipos-generados.md) | Web en Astro: HTML generado, un solo script y tipos generados | Aceptada |
+| [0006](0006-direccion-publica-y-qr.md) | La dirección pública la decide GitHub Pages y los QR salen de ella | Aceptada |
 
 ## Plantilla
 

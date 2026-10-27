@@ -1,0 +1,273 @@
+---
+/**
+ * Tarjetas QR para imprimir (tamaño carta, 4 tarjetas por hoja).
+ *
+ * - Hoja 1: tarjetas de MESA. El QR abre la carta con #mesa (solo lectura).
+ * - Hoja 2: tarjetas de DOMICILIO, para bolsas, volantes o la vitrina.
+ *
+ * Los QR se generan aquí, en el build, a partir de la dirección pública
+ * del sitio (ADR 0006). No se descargan de ningún servicio externo.
+ * Esta página no aparece en el menú ni en los buscadores: se abre
+ * escribiendo la dirección y terminando en /qr/.
+ */
+import QRCode from "qrcode";
+import Base from "../layouts/Base.astro";
+import { carta } from "../lib/carta";
+import { urlCarta, type Modo } from "../lib/enlaces";
+import { formatearTelefono } from "../lib/formato";
+
+const { restaurante } = carta;
+const sitio = Astro.site ?? "http://localhost";
+const base = import.meta.env.BASE_URL;
+
+/** El QR como SVG (vectorial: se ve nítido a cualquier tamaño de impresión). */
+async function qr(url: string): Promise<string> {
+  return QRCode.toString(url, {
+    type: "svg",
+    // Nivel Q: el código se puede leer aunque se dañe ~25 % (manchas, dobleces).
+    errorCorrectionLevel: "Q",
+    margin: 0,
+    color: { dark: "#2A1F1B", light: "#FFFFFF" },
+  });
+}
+
+interface Tarjeta {
+  modo: Modo;
+  titulo: string;
+  instruccion: string;
+  /** Texto al pie de la tarjeta; null = sin texto. */
+  pie: string | null;
+  url: string;
+  svg: string;
+}
+
+const tarjetas: Tarjeta[] = await Promise.all(
+  (
+    [
+      {
+        modo: "mesa",
+        titulo: "Nuestra carta",
+        instruccion: "Escanea con la cámara de tu celular",
+        pie: null,
+      },
+      {
+        modo: "domicilio",
+        titulo: "Pide a domicilio",
+        instruccion: "Escanea, arma tu pedido y envíalo por WhatsApp",
+        pie: `WhatsApp ${formatearTelefono(restaurante.whatsapp)} · @${restaurante.instagram}`,
+      },
+    ] as const
+  ).map(async (t) => {
+    const url = urlCarta(sitio, base, t.modo);
+    return { ...t, url, svg: await qr(url) };
+  }),
+);
+
+const logo = `${base.replace(/\/?$/, "/")}logo.webp`;
+const esLocal = new URL(sitio).hostname === "localhost";
+---
+
+<Base titulo={`Tarjetas QR · ${restaurante.nombre}`} descripcion="Tarjetas QR para imprimir." indexar={false}>
+  <header class="barra">
+    <div>
+      <h1>Tarjetas QR</h1>
+      <p>
+        Dos hojas tamaño carta con 4 tarjetas cada una: la primera para las <strong>mesas</strong> y la
+        segunda para <strong>domicilios</strong>. Antes de imprimir, escanea cada QR con tu celular y
+        confirma que abre la carta.
+      </p>
+      {
+        esLocal && (
+          <p class="alerta">
+            Estás viendo la versión de tu computador. Imprime desde la carta publicada en internet, o los QR
+            no funcionarán.
+          </p>
+        )
+      }
+      <ul>
+        {
+          tarjetas.map((t) => (
+            <li>
+              {t.modo === "mesa" ? "Mesas" : "Domicilios"}: <a href={t.url}>{t.url}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+    <button type="button" id="imprimir">Imprimir</button>
+  </header>
+
+  {
+    tarjetas.map((t) => (
+      <section class="hoja" aria-label={`Hoja de tarjetas: ${t.titulo}`}>
+        {[1, 2, 3, 4].map(() => (
+          <article class="tarjeta">
+            <img src={logo} alt={restaurante.nombre} width="132" height="111" />
+            <h2>{t.titulo}</h2>
+            <div class="qr" set:html={t.svg} />
+            <p class="instruccion">{t.instruccion}</p>
+            {t.pie && <p class="pie">{t.pie}</p>}
+          </article>
+        ))}
+      </section>
+    ))
+  }
+</Base>
+
+<script>
+  document.getElementById("imprimir")?.addEventListener("click", () => window.print());
+</script>
+
+<style>
+  /* El papel es blanco aunque el celular esté en modo oscuro. */
+  :global(body) {
+    background: #e9e1d2;
+  }
+
+  .barra {
+    max-width: 21.59cm;
+    margin: 24px auto;
+    padding: 0 16px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    justify-content: space-between;
+    color: var(--ink);
+  }
+
+  .barra h1 {
+    margin: 0 0 6px;
+    font-family: var(--font-display);
+    color: var(--accent);
+  }
+
+  .barra p,
+  .barra ul {
+    margin: 0 0 8px;
+    max-width: 60ch;
+  }
+
+  .barra a {
+    color: var(--accent);
+    word-break: break-all;
+  }
+
+  .alerta {
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: var(--surface-2);
+    color: var(--warn);
+    font-weight: 600;
+  }
+
+  #imprimir {
+    flex-shrink: 0;
+    min-height: 48px;
+    padding: 0 22px;
+    border: 0;
+    border-radius: 12px;
+    background: var(--accent-bg);
+    color: var(--on-accent);
+    font-weight: 600;
+  }
+
+  /* Hoja tamaño carta (21,59 × 27,94 cm) con márgenes de 1 cm. */
+  .hoja {
+    width: 21.59cm;
+    height: 27.94cm;
+    margin: 0 auto 24px;
+    padding: 1cm;
+    background: #fff;
+    box-shadow: 0 4px 20px rgb(0 0 0 / 15%);
+    display: grid;
+    /* minmax(0, 1fr): las filas no crecen aunque el contenido empuje. */
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    overflow: hidden;
+    color: #2a1f1b;
+  }
+
+  .tarjeta {
+    /* Líneas punteadas: por donde se corta. */
+    border: 1px dashed #c9b996;
+    padding: 0.7cm 0.6cm;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Centrado vertical; si hay pie, su margin-top: auto lo baja al borde. */
+    justify-content: center;
+    text-align: center;
+  }
+
+  .tarjeta img {
+    width: 2.6cm;
+    height: auto;
+  }
+
+  .tarjeta h2 {
+    margin: 0.15cm 0 0.35cm;
+    font-family: "Playfair Display", Georgia, serif;
+    font-style: italic;
+    font-size: 22pt;
+    line-height: 1.1;
+    color: #6b1e2a;
+  }
+
+  .qr {
+    /* 5 cm: se lee bien desde unos 50 cm de distancia. */
+    width: 5cm;
+    height: 5cm;
+  }
+
+  .qr :global(svg) {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .instruccion {
+    margin: 0.4cm 0 0.1cm;
+    font-size: 11.5pt;
+    font-weight: 600;
+  }
+
+  .pie {
+    margin: auto 0 0;
+    padding-top: 0.3cm;
+    font-size: 9pt;
+    color: #8a6424;
+  }
+
+  @page {
+    size: letter;
+    margin: 0;
+  }
+
+  /* Cada hoja empieza en una página nueva (sin dejar una en blanco al final). */
+  .hoja + .hoja {
+    break-before: page;
+  }
+
+  @media print {
+    :global(body) {
+      background: #fff;
+    }
+
+    .barra {
+      display: none;
+    }
+
+    .hoja {
+      margin: 0;
+      box-shadow: none;
+      print-color-adjust: exact;
+    }
+  }
+
+  /* En el celular, la hoja se ve completa reduciéndola (solo en pantalla). */
+  @media screen and (width < 840px) {
+    .hoja {
+      zoom: 0.45;
+    }
+  }
+</style>
