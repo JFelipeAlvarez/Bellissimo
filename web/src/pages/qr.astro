@@ -64,7 +64,9 @@ const tarjetas: Tarjeta[] = await Promise.all(
 );
 
 const logo = `${base.replace(/\/?$/, "/")}logo.webp`;
-const esLocal = new URL(sitio).hostname === "localhost";
+// SITIO_URL solo existe cuando publica GitHub Actions (ver astro.config.mjs).
+// Sin ella, la dirección es la de por defecto y no hay que imprimir.
+const esLocal = !process.env["SITIO_URL"];
 ---
 
 <Base titulo={`Tarjetas QR · ${restaurante.nombre}`} descripcion="Tarjetas QR para imprimir." indexar={false}>
